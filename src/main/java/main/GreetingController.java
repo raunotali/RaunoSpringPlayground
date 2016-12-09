@@ -2,6 +2,8 @@ package main;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,5 +20,11 @@ public class GreetingController {
         defaultValue="World") String name) {
         return new Greeting(counter.incrementAndGet(),
             String.format(template, name));
+    }
+
+    //TODO:remove debug
+    @PostConstruct
+    private void postConstructDebug() {
+        System.out.println("DEBUGLINE FROM GREETINGCONTROLLER");
     }
 }
