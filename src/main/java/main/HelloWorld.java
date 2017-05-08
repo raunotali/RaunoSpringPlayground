@@ -1,19 +1,13 @@
 package main;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 
-@Configuration
-@ComponentScan("main")
-@EnableWebMvc
-public class HelloWorld extends WebMvcConfigurerAdapter {
+@SpringBootApplication
+public class HelloWorld extends SpringBootServletInitializer {
 
-    @Override
-    public void configureDefaultServletHandling(
-        DefaultServletHandlerConfigurer configurer) {
-        configurer.enable();
+    public static void main(String[] args) {
+        SpringApplication.run(HelloWorld.class, args);
     }
 }
