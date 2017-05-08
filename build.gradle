@@ -1,0 +1,76 @@
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'idea'
+apply plugin: 'com.bmuschko.cargo'
+apply plugin: 'war'
+apply plugin: 'org.springframework.boot'
+
+mainClassName = 'main.HelloWorld'
+
+repositories {
+	mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.bmuschko:gradle-cargo-plugin:2.2.3'
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.3.RELEASE'
+    }
+}
+
+dependencies {
+    compile 'org.springframework:spring-context:4.3.4.RELEASE'
+    compile 'org.springframework:spring-web:4.3.4.RELEASE'
+    compile 'org.springframework:spring-webmvc:4.3.4.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-web:1.5.3.RELEASE'
+    compileOnly "org.projectlombok:lombok:1.16.12"
+    testCompile 'junit:junit:4.12'
+}
+
+jar {
+	baseName = 'RaunoSpringPlayground'
+	version = '0.1.0'
+}
+
+cargo {
+    containerId = 'tomcat8x'
+    port = deployPort.toInteger()
+
+    remote {
+        hostname = deployRemoteHost
+        username = deployRemoteUser
+        password = deployRemotePass
+    }
+
+    deployable {
+        context = 'playground'
+    }
+
+    local {
+        def localTomcat = project.properties['deployLocalTomcatHome'] ?:
+                "null"
+        homeDir = file(localTomcat)
+        outputFile = file('build/tomcat.log')
+        timeout = 60000
+        containerProperties {
+            property 'cargo.tomcat.ajp.port', 9099
+        }
+    }
+}
+
+war {
+    baseName = 'playground'
+}
+
+cargoRedeployRemote.dependsOn assemble
+
+task deploy {
+    dependsOn cargoDeployRemote
+}
